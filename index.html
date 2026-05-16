@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID_DATABASE_V9</title>
+    <style>
+        :root { --main-color: #00FF00; --bg-color: #000; }
+        body, html { background-color: var(--bg-color); color: var(--main-color); font-family: 'Courier New', monospace; margin: 0; padding: 0; height: 100%; overflow-x: hidden; }
+        body::before { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); z-index: 1000; background-size: 100% 2px; pointer-events: none; }
+        .container { padding: 20px; max-width: 600px; margin: auto; position: relative; z-index: 10; }
+        
+        .settings-fixed { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; cursor: pointer; z-index: 2000; display: none; }
+        .settings-fixed svg { fill: var(--main-color); }
+        
+        .header { font-size: 20px; text-align: center; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        .box { border: 1px solid var(--main-color); padding: 15px; margin-bottom: 20px; background: rgba(0,20,0,0.3); border-radius: 5px; position: relative; }
+        
+        input[type="email"], input[type="password"] { background: #000; border: 1px solid var(--main-color); color: var(--main-color); padding: 12px; width: calc(100% - 26px); margin-bottom: 15px; outline: none; font-family: inherit; }
+        
+        .remember-box { margin-bottom: 20px; display: flex; align-items: center; font-size: 14px; }
+        .remember-box input { margin-right: 10px; accent-color: var(--main-color); cursor: pointer; }
+
+        .btn { width: 100%; padding: 15px; background: transparent; border: 1px solid var(--main-color); color: var(--main-color); cursor: pointer; text-transform: uppercase; font-weight: bold; margin-bottom: 10px; }
+        .btn:hover { background: var(--main-color); color: #000; }
+        
+        .screen { display: none; }
+        .img-box { width: 100%; height: 230px; border: 1px solid var(--main-color); margin: 10px 0; background-size: cover; background-position: center; background-color: #111; }
+
+        .small-key-hint { font-size: 11px; text-align: center; margin-top: 15px; opacity: 0.5; letter-spacing: 1px; }
+        
+        .nav-buttons { display: flex; gap: 10px; margin-top: 15px; }
+        .nav-buttons .btn { flex: 1; }
+
+        /* GLITCH / HACKER EFFECTS */
+        .danger-active {
+            animation: glitchBg 0.2s infinite alternate;
+        }
+        .danger-active .box, .danger-active input, .danger-active .btn {
+            animation: glitchBorder 0.15s infinite alternate;
+            text-shadow: 2px 2px #ff0055, -2px -2px #00ffff;
+        }
+        .danger-active .header {
+            animation: glitchText 0.3s infinite;
+        }
+
+        @keyframes glitchBg {
+            0% { background-color: #000; }
+            100% { background-color: #1a0000; }
+        }
+        @keyframes glitchBorder {
+            0% { border-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
+            100% { border-color: #ff5555; box-shadow: 0 0 15px #ff0000; }
+        }
+        @keyframes glitchText {
+            0% { transform: skew(0deg); text-shadow: 1px 1px #fff; }
+            20% { transform: skew(-3deg); text-shadow: -2px 2px #ff0000; }
+            40% { transform: skew(3deg); text-shadow: 2px -2px #ff0000; }
+            60% { transform: skew(-1deg); }
+            100% { transform: skew(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="settings-trigger" class="settings-fixed" onclick="showSettings()">
+    <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.81,11.68,4.81,12c0,0.33,0.02,0.65,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+</div>
+
+<div class="container">
+    
+    <div id="auth-screen" class="screen" style="display: block;">
+        <div class="header">SYSTEM_LOGIN</div>
+        <div class="box">
+            <input type="email" id="email" placeholder="AGENT_EMAIL">
+            <input type="password" id="password" placeholder="PASSWORD">
+            
+            <div class="remember-box">
+                <input type="checkbox" id="rememberMe">
+                <label for="rememberMe" style="cursor:pointer;">Remember Email</label>
+            </div>
+
+            <button class="btn" onclick="handleAuth()">[LOG_IN]</button>
+            <div class="small-key-hint">ACCESS_CODE: 0852</div>
+        </div>
+    </div>
+
+    <div id="archive-screen" class="screen">
+        <div class="header" id="archive-title">CLASSIFIED_DATA // PAGE_1</div>
+        
+        <div id="data-page-1" class="data-page">
+            <div class="box">
+                <strong>LEVEL 0: THE LOBBY</strong>
+                <div class="img-box" style="background-image: url('IMG_20260516_001421.jpg');"></div>
+                <p>STATUS: UNSTABLE</p>
+                <p>DESCRIPTION: An endless maze of randomly segmented empty rooms with yellowish wallpaper and buzzing fluorescent lights.</p>
+            </div>
+        </div>
+
+        <div id="data-page-2" class="data-page" style="display:none;">
+            <div class="box">
+                <strong>LEVEL 1: HABITABLE ZONE</strong>
+                <div class="img-box" style="background-image: url('IMG_20260516_001444.jpg');"></div>
+                <p>STATUS: SECURE_ZONE</p>
+                <p>DESCRIPTION: A massive, abandoned warehouse stretching into infinity. Contains crated supplies and low-level hostile entities.</p>
+            </div>
+        </div>
+
+        <div id="data-page-3" class="data-page" style="display:none;">
+            <div class="box">
+                <strong>LEVEL 2: PIPE DREAMS</strong>
+                <div class="img-box" style="background-image: url('IMG_20260516_001513.jpg');"></div>
+                <p>STATUS: EXTREME_DANGER</p>
+                <p>DESCRIPTION: Long, narrow concrete maintenance tunnels with boiling pipe structures running along the walls. High entity count detected.</p>
+            </div>
+        </div>
+
+        <div id="data-page-4" class="data-page" style="display:none;">
+            <div class="box">
+                <strong>SYSTEM FILE: CORRUPTION_LOG</strong>
+                <p>WARNING: MALWARE INFILTRATION DETECTED IN SECTOR 7.</p>
+                <p>BREACH TIME: UNKNOWN</p>
+                <p>LOGS: Multiple unauthorized encryption requests have bypassed the core mainframe firewall. Sector lockdown is recommended immediately.</p>
+            </div>
+        </div>
+
+        <div id="data-page-5" class="data-page" style="display:none;">
+            <div class="box">
+                <strong>PROJECT: VOID_WALKER</strong>
+                <p>OBJECT TYPE: CLASSIFIED ANOMALY</p>
+                <p>HAZARD CLASS: LEVEL 5 (APOLYON)</p>
+                <p>SUMMARY: Attempts to map the boundaries of the void database have failed. Reality anchors are fluctuating between 12% and 40% efficiency.</p>
+            </div>
+        </div>
+
+        <div id="data-page-6" class="data-page" style="display:none;">
+            <div class="box">
+                <strong>TERMINAL OVERRIDE: USER_GABRIEL</strong>
+                <p>ACCESS NODE: TERMINAL_06</p>
+                <p>CLEARANCE LEVEL: ROOT_ADMIN</p>
+                <p>NOTICE: All incoming connections are being tracked by the unknown external hacker entity. Clear system memory cache immediately to prevent data leaks.</p>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn" onclick="changePage(-1)">[PREV]</button>
+            <button class="btn" onclick="changePage(1)">[NEXT]</button>
+        </div>
+
+        <button class="btn" onclick="logout()" style="margin-top: 15px;">[LOGOUT / RESET]</button>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <div class="header">SETTINGS</div>
+        <div class="box">
+            <button class="btn" onclick="setTheme('#00FF00', false)">GREEN_MODE</button>
+            <button class="btn" onclick="setTheme('#FF0000', false)" style="margin-top:10px;">RED_MODE</button>
+            <button class="btn" onclick="setTheme('#FF0033', true)" style="margin-top:10px; border-color: #FF0033; color: #FF0033;">⚠️ DANGER RED (HACK)</button>
+        </div>
+        <button class="btn" onclick="showArchive()">[BACK]</button>
+    </div>
+
+</div>
+
+<script>
+    let currentPage = 1;
+    const totalPages = 6; // ახლა 6 გვერდია
+
+    window.onload = function() {
+        const savedEmail = localStorage.getItem('userEmail');
+        if (savedEmail) {
+            document.getElementById('email').value = savedEmail;
+            document.getElementById('rememberMe').checked = true;
+        }
+    }
+
+    function handleAuth() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        const rememberMe = document.getElementById('rememberMe').checked;
+        
+        const emailPattern = /\S+@\S+\.\S+/;
+
+        if (!emailPattern.test(email)) {
+            alert("Error: Please enter a valid email address!");
+            return;
+        }
+
+        if (pass === "0852") {
+            if (rememberMe) {
+                localStorage.setItem('userEmail', email);
+            } else {
+                localStorage.removeItem('userEmail');
+            }
+            showArchive();
+            document.getElementById('settings-trigger').style.display = 'block';
+        } else {
+            alert("Access Denied: Incorrect password!");
+        }
+    }
+
+    function changePage(direction) {
+        document.getElementById(`data-page-${currentPage}`).style.display = 'none';
+        currentPage += direction;
+        if (currentPage > totalPages) currentPage = 1;
+        if (currentPage < 1) currentPage = totalPages;
+        
+        document.getElementById(`data-page-${currentPage}`).style.display = 'block';
+        document.getElementById('archive-title').innerText = `CLASSIFIED_DATA // PAGE_${currentPage}`;
+    }
+
+    function logout() {
+        location.reload();
+    }
+
+    function showArchive() {
+        hideScreens();
+        document.getElementById('archive-screen').style.display = 'block';
+    }
+
+    function showSettings() {
+        hideScreens();
+        document.getElementById('settings-screen').style.display = 'block';
+    }
+
+    function hideScreens() {
+        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+    }
+
+    function setTheme(color, isGlitch) {
+        document.documentElement.style.setProperty('--main-color', color);
+        if (isGlitch) {
+            document.body.classList.add('danger-active');
+        } else {
+            document.body.classList.remove('danger-active');
+        }
+    }
+</script>
+
+</body>
+</html>
