@@ -5,138 +5,163 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TERMINAL_X_0852</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            background-color: #050505;
-            color: #00ff33;
+            background-color: black;
+            color: #00FF00;
             font-family: 'Courier New', Courier, monospace;
-            padding: 20px;
-            overflow-x: hidden;
-        }
-
-        #terminal {
-            max-width: 900px;
-            margin: 0 auto;
-            background: rgba(10, 10, 10, 0.95);
-            border: 1px solid #00ff33;
-            box-shadow: 0 0 15px rgba(0, 255, 51, 0.2);
-            padding: 20px;
-            min-height: 500px;
-            border-radius: 5px;
-        }
-
-        .output-line {
-            margin-bottom: 8px;
-            line-height: 1.4;
-            white-space: pre-wrap;
-        }
-
-        .system-msg { color: #00ff33; }
-        .error-msg { color: #ff3333; }
-        .success-msg { color: #00ffff; font-weight: bold; }
-        .trigger-title { color: #ffff00; font-weight: bold; }
-        .trigger-desc { color: #00ff33; }
-        .muted-text { color: #888888; }
-
-        .input-area {
             display: flex;
-            margin-top: 15px;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
         }
-
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        #output {
+            flex-grow: 1;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+        }
         .prompt {
-            color: #00ff33;
+            color: #00FF00;
             margin-right: 10px;
             font-weight: bold;
+            white-space: nowrap;
         }
-
-        input[type="text"] {
+        #command-input {
             background: transparent;
             border: none;
-            color: #00ff33;
+            color: #00FF00;
             font-family: 'Courier New', Courier, monospace;
             font-size: 16px;
             width: 100%;
             outline: none;
         }
-
         a {
-            color: #ffff00;
+            color: #00FFFF;
             text-decoration: underline;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-<div id="terminal">
-    <div id="history">
-        <div class="output-line system-msg">==================================================</div>
-        <div class="output-line system-msg">TERMINAL CORE v2.4 - BACKROOMS CLASSIFIED DATABASE</div>
-        <div class="output-line system-msg">==================================================</div>
-        <div class="output-line muted-text">Enter access code to decrypt hidden archives...</div>
-        <div class="output-line muted-text">(Hint: Try '0852' for database or 'gd22' for dev files)</div>
-    </div>
-    
-    <div class="input-area">
-        <span class="prompt">root@backrooms:~#</span>
-        <input type="text" id="texInput" autofocus autocomplete="off" placeholder="Enter code...">
-    </div>
+<canvas id="matrix-canvas"></canvas>
+
+<div id="output"></div>
+
+<div class="input-container">
+    <span class="prompt">X_0852@SYSTEM:~#</span>
+    <input type="text" id="command-input" autofocus autocomplete="off">
 </div>
 
 <script>
-    const texInput = document.getElementById('texInput');
-    const history = document.getElementById('history');
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
 
-    // ტექსტის გამოტანის ფუნქცია
-    function printLine(text, className = 'system-msg') {
-        const line = document.createElement('div');
-        line.className = `output-line ${className}`;
-        line.innerHTML = text;
-        history.appendChild(line);
-        // ავტომატური სქროლი დაბლა
-        document.getElementById('terminal').scrollTop = document.getElementById('terminal').scrollHeight;
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
 
-    texInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-            const code = texInput.value.trim().toLowerCase();
-            printLine(`<span style="color: #888;">> ${texInput.value}</span>`);
-            texInput.value = '';
+    const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890';
+    const alphabet = katakana.split('');
 
-            if (code === '0852') {
-                printLine(">> ACCESS GRANTED: DECRYPTING BACKROOMS FILES...", "success-msg");
-                printLine("--------------------------------------------------", "muted-text");
-                printLine("[FILE_01]: Level 0 Logs - 'The Lobby' structural anomaly discovered.");
-                printLine("[FILE_02]: Warning - Entity contact reported in sector 4.");
-                printLine("[LINK]: <a href='https://speedyplanncr.github.io/Spbackroomsnc/' target='_blank'>CLICK HERE TO OPEN DIRECT ARCHIVE LINK</a>", "success-msg");
-                printLine("--------------------------------------------------", "muted-text");
-            
-            // აი აქ არის ახალი ჩამატებული GD 2.2 ტრიგერების ნაწილი
-            } else if (code === 'gd22') {
-                printLine(">> ACCESS GRANTED: GEOMETRY DASH 2.2 TRIGGER GUIDE <<", "success-msg");
-                printLine("--------------------------------------------------", "muted-text");
-                printLine("<span class='trigger-title'>[CAMERA TRIGGERS]</span> - Control zoom, rotation, and free-movement dynamically.", "trigger-desc");
-                printLine("<span class='trigger-title'>[AREA TRIGGERS]</span>   - Target specific zones. Applies Move, Fade, or Scale to objects inside.", "trigger-desc");
-                printLine("<span class='trigger-title'>[SONG TRIGGER]</span>    - Changes background music or adjusts track speed/pitch mid-level.", "trigger-desc");
-                printLine("<span class='trigger-title'>[SFX TRIGGER]</span>     - Plays custom sound effects with spatial audio and volume controls.", "trigger-desc");
-                printLine("<span class='trigger-title'>[GRADIENT TRIGGER]</span>- Creates smooth, cinematic color transitions across the screen.", "trigger-desc");
-                printLine("--------------------------------------------------", "muted-text");
-                printLine("System stable. Ready for next input.");
-            
-            } else if (code === 'clear') {
-                history.innerHTML = '';
-            } else if (code === '') {
-                // არაფერს აკეთებს თუ ცარიელია
-            } else {
-                printLine(`ERROR: Access denied for code '${code}'. Invalid credentials.`, "error-msg");
+    const fontSize = 16;
+    let columns = canvas.width / fontSize;
+
+    const rainDrops = [];
+    function initRain() {
+        columns = canvas.width / fontSize;
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = 1;
+        }
+    }
+    initRain();
+    window.addEventListener('resize', initRain);
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.15)';
+        ctx.font = fontSize + 'px monospace';
+
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                rainDrops[i] = 0;
             }
+            rainDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 30);
+
+    const outputDiv = document.getElementById('output');
+    const inputField = document.getElementById('command-input');
+
+    const welcomeText = `==================================================
+TERMINAL CORE CORE_X_0852 INITIALIZED...
+SYSTEM: ONLINE
+STATUS: SECURE
+--------------------------------------------------
+ENTER ACCESS CODE TO DECRYPT CLASSIFIED FILES.
+==================================================\n`;
+
+    function typeWriter(text, index = 0) {
+        if (index < text.length) {
+            outputDiv.textContent += text.charAt(index);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+            setTimeout(() => typeWriter(text, index + 1), 5);
+        }
+    }
+    typeWriter(welcomeText);
+
+    inputField.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const command = inputField.value.trim();
+            outputDiv.textContent += `\nX_0852@SYSTEM:~# ${command}\n`;
+            
+            if (command === '0852') {
+                outputDiv.textContent += `>> ACCESS GRANTED. DECRYPTING BACKROOMS ARCHIVES...\n`;
+                outputDiv.textContent += `>> LOADING DIRECT_LINK.EXE...\n`;
+                
+                // აქ შენი Adsterra-ს ლინკი იხსნება ჩვეულებრივად
+                const linkContainer = document.createElement('div');
+                linkContainer.innerHTML = `>> <a href="https://speedyplanncr.github.io/Spbackroomsnc/" target="_blank">CLICK HERE TO ACCESS THE SECURE DATABASE</a>\n`;
+                outputDiv.appendChild(linkContainer);
+            } else if (command.toLowerCase() === 'clear') {
+                outputDiv.textContent = '';
+            } else if (command === '') {
+                // ცარიელზე არაფერს შვრება
+            } else {
+                outputDiv.textContent += `>> ERROR: ACCESS DENIED. INVALID DECRYPTION CODE.\n`;
+            }
+
+            inputField.value = '';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
         }
     });
+
+    document.addEventListener('click', () => inputField.focus());
 </script>
 
 </body>
