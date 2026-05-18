@@ -3,263 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOID_DATABASE_V9</title>
+    <title>ASYNC - CORE SYSTEM</title>
     <style>
-        :root { --main-color: #00FF00; --bg-color: #000; }
-        body, html { background-color: var(--bg-color); color: var(--main-color); font-family: 'Courier New', monospace; margin: 0; padding: 0; height: 100%; overflow-x: hidden; }
-        body::before { content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); z-index: 1000; background-size: 100% 2px; pointer-events: none; }
-        .container { padding: 20px; max-width: 600px; margin: auto; position: relative; z-index: 10; }
-        
-        .settings-fixed { position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; cursor: pointer; z-index: 2000; display: none; }
-        .settings-fixed svg { fill: var(--main-color); }
-        
-        .header { font-size: 20px; text-align: center; text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
-        .box { border: 1px solid var(--main-color); padding: 15px; margin-bottom: 20px; background: rgba(0,20,0,0.3); border-radius: 5px; position: relative; }
-        
-        input[type="email"], input[type="password"] { background: #000; border: 1px solid var(--main-color); color: var(--main-color); padding: 12px; width: calc(100% - 26px); margin-bottom: 15px; outline: none; font-family: inherit; }
-        
-        .remember-box { margin-bottom: 20px; display: flex; align-items: center; font-size: 14px; }
-        .remember-box input { margin-right: 10px; accent-color: var(--main-color); cursor: pointer; }
-
-        .btn { width: 100%; padding: 15px; background: transparent; border: 1px solid var(--main-color); color: var(--main-color); cursor: pointer; text-transform: uppercase; font-weight: bold; margin-bottom: 10px; }
-        .btn:hover { background: var(--main-color); color: #000; }
-        
-        .screen { display: none; }
-        .img-box { width: 100%; height: 230px; border: 1px solid var(--main-color); margin: 10px 0; background-size: cover; background-position: center; background-color: #111; }
-
-        .small-key-hint { font-size: 11px; text-align: center; margin-top: 15px; opacity: 0.5; letter-spacing: 1px; }
-        
-        .nav-buttons { display: flex; gap: 10px; margin-top: 15px; }
-        .nav-buttons .btn { flex: 1; }
-
-        /* GLITCH / HACKER EFFECTS */
-        .danger-active {
-            animation: glitchBg 0.2s infinite alternate;
-        }
-        .danger-active .box, .danger-active input, .danger-active .btn {
-            animation: glitchBorder 0.15s infinite alternate;
-            text-shadow: 2px 2px #ff0055, -2px -2px #00ffff;
-        }
-        .danger-active .header {
-            animation: glitchText 0.3s infinite;
+        body {
+            background-color: #050505;
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        @keyframes glitchBg {
-            0% { background-color: #000; }
-            100% { background-color: #1a0000; }
+        /* CRT Scanlines and flicker effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
         }
-        @keyframes glitchBorder {
-            0% { border-color: #ff0000; box-shadow: 0 0 5px #ff0000; }
-            100% { border-color: #ff5555; box-shadow: 0 0 15px #ff0000; }
+
+        .terminal {
+            width: 100%;
+            max-width: 600px;
+            background: #000000;
+            border: 2px solid #ff3333;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(255, 51, 51, 0.2);
+            position: relative;
+            z-index: 1;
         }
-        @keyframes glitchText {
-            0% { transform: skew(0deg); text-shadow: 1px 1px #fff; }
-            20% { transform: skew(-3deg); text-shadow: -2px 2px #ff0000; }
-            40% { transform: skew(3deg); text-shadow: 2px -2px #ff0000; }
-            60% { transform: skew(-1deg); }
-            100% { transform: skew(0deg); }
+
+        .system-logs {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            border-bottom: 1px dashed #ff3333;
+            padding-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"] {
+            background: #111;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 12px;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+            text-transform: uppercase;
+            box-shadow: inset 0 0 5px rgba(255, 51, 51, 0.1);
+        }
+
+        .exec-btn {
+            background: #ff3333;
+            color: #000;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .exec-btn:hover {
+            background: #cc0000;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(255, 51, 51, 0.5);
+        }
+
+        .output-message {
+            margin-top: 20px;
+            font-size: 14px;
+            min-height: 40px;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+
+        /* Initial Screen overlay */
+        #audio-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .init-btn {
+            background: transparent;
+            color: #ff3333;
+            border: 2px dashed #ff3333;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0.3; }
         }
     </style>
 </head>
 <body>
 
-<div id="settings-trigger" class="settings-fixed" onclick="showSettings()">
-    <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.81,11.68,4.81,12c0,0.33,0.02,0.65,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
-</div>
+    <div id="audio-overlay">
+        <button class="init-btn" onclick="startTerminal()">> INITIALIZE CORE SYSTEM <</button>
+    </div>
 
-<div class="container">
-    
-    <div id="auth-screen" class="screen" style="display: block;">
-        <div class="header">SYSTEM_LOGIN</div>
-        <div class="box">
-            <input type="email" id="email" placeholder="AGENT_EMAIL">
-            <input type="password" id="password" placeholder="PASSWORD">
+    <audio id="bg-sound" loop>
+        <source src="https://archive.org/download/backrooms-ambience/backrooms-ambience.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="terminal">
+        <div class="system-logs">
+            > ASYNC CORE TERMINAL v1.95<br>
+            > LOCATION: SECTOR 4 - MAINFRM<br>
+            > CURRENT STATUS: SYSTEM BREACH DETECTED<br>
+            > RADIATION CONTAMINATION LEVEL: 89%<br>
+            > WARNING: ENTER ACCESS CODE OR OVERRIDE...
+        </div>
+
+        <div class="input-area">
+            <label for="code-input">ENTER ACCESS COMMAND:</label>
+            <input type="text" id="code-input" placeholder="----" maxlength="20" autocomplete="off">
+            <button class="exec-btn" onclick="checkCode()">Execute Command</button>
+        </div>
+
+        <div class="output-message" id="output"></div>
+    </div>
+
+    <script>
+        function startTerminal() {
+            var audio = document.getElementById("bg-sound");
+            audio.volume = 0.4;
+            audio.play().catch(function(error) {
+                console.log("Audio blocked: ", error);
+            });
+            document.getElementById("audio-overlay").style.display = "none";
+        }
+
+        function checkCode() {
+            const input = document.getElementById('code-input').value.trim().toUpperCase();
+            const output = document.getElementById('output');
             
-            <div class="remember-box">
-                <input type="checkbox" id="rememberMe">
-                <label for="rememberMe" style="cursor:pointer;">Remember Email</label>
-            </div>
-
-            <button class="btn" onclick="handleAuth()">[LOG_IN]</button>
-            <div class="small-key-hint">ACCESS_CODE: 0852</div>
-        </div>
-    </div>
-
-    <div id="archive-screen" class="screen">
-        <div class="header" id="archive-title">CLASSIFIED_DATA // PAGE_1</div>
-        
-        <div id="data-page-1" class="data-page">
-            <div class="box">
-                <strong>LEVEL 0: THE LOBBY</strong>
-                <div class="img-box" style="background-image: url('IMG_20260516_001421.jpg');"></div>
-                <p>STATUS: UNSTABLE</p>
-                <p>DESCRIPTION: An endless maze of randomly segmented empty rooms with yellowish wallpaper and buzzing fluorescent lights.</p>
-            </div>
-        </div>
-
-        <div id="data-page-2" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>LEVEL 1: HABITABLE ZONE</strong>
-                <div class="img-box" style="background-image: url('IMG_20260516_001444.jpg');"></div>
-                <p>STATUS: SECURE_ZONE</p>
-                <p>DESCRIPTION: A massive, abandoned warehouse stretching into infinity. Contains crated supplies and low-level hostile entities.</p>
-            </div>
-        </div>
-
-        <div id="data-page-3" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>LEVEL 2: PIPE DREAMS</strong>
-                <div class="img-box" style="background-image: url('IMG_20260516_001513.jpg');"></div>
-                <p>STATUS: EXTREME_DANGER</p>
-                <p>DESCRIPTION: Long, narrow concrete maintenance tunnels with boiling pipe structures running along the walls. High entity count detected.</p>
-            </div>
-        </div>
-
-        <div id="data-page-4" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>SYSTEM FILE: CORRUPTION_LOG</strong>
-                <p>WARNING: MALWARE INFILTRATION DETECTED IN SECTOR 7.</p>
-                <p>BREACH TIME: UNKNOWN</p>
-                <p>LOGS: Multiple unauthorized encryption requests have bypassed the core mainframe firewall. Sector lockdown is recommended immediately.</p>
-            </div>
-        </div>
-
-        <div id="data-page-5" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>PROJECT: VOID_WALKER</strong>
-                <p>OBJECT TYPE: CLASSIFIED ANOMALY</p>
-                <p>HAZARD CLASS: LEVEL 5 (APOLYON)</p>
-                <p>SUMMARY: Attempts to map the boundaries of the void database have failed. Reality anchors are fluctuating between 12% and 40% efficiency.</p>
-            </div>
-        </div>
-
-        <div id="data-page-6" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>CRITICAL OVERRIDE // USER_GABRIEL</strong>
-                <p>TERMINAL: NODE_06 // AREA_7</p>
-                <p>SYSTEM WARNING: SIGNAL LOSS IMMINENT.</p>
-                <p>LOGS: No-clip detected in sector 4. Reality anchors dropped to 0%. If you hear something nearby, it has definitely heard you. Do not look back.</p>
-            </div>
-        </div>
-
-        <div id="data-page-7" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>GD 2.2 SYSTEM: CORE TRIGGERS (PART 1)</strong>
-                <p><strong>> CAMERA_ZOOM:</strong> Dynamically changes the camera view scale. Allows smooth close-ups or massive structural zoom-outs mid-gameplay.</p>
-                <p><strong>> CAMERA_ROTATE:</strong> Rotates the entire player perspective to any degree. Essential for 2.2 free-fly and camera-rotation mechanics.</p>
-                <p><strong>> CAMERA_OFFSET:</strong> Shifts the camera focus away from the player icon on X or Y axis, letting players see what's ahead.</p>
-                <p><strong>> AREA_MOVE:</strong> Moves all target group objects smoothly only when the player enters a specifically designated zone.</p>
-                <p><strong>> AREA_FADE:</strong> Triggers opacity and transparency changes for grouped blocks inside a strict boundary line.</p>
-            </div>
-        </div>
-
-        <div id="data-page-8" class="data-page" style="display:none;">
-            <div class="box">
-                <strong>GD 2.2 SYSTEM: AUDIO & VISUAL (PART 2)</strong>
-                <p><strong>> SONG_TRIGGER:</strong> Overrides background audio tracks instantly. Can shift track timestamps, speed up pitch, or slow down music dynamically.</p>
-                <p><strong>> SFX_TRIGGER:</strong> Injects custom sound effects into the environment with dedicated volume, distance, and custom playback settings.</p>
-                <p><strong>> GRADIENT_TRIGGER:</strong> Generates beautiful multi-color background fades and screen gradients without spamming individual pulse triggers.</p>
-                <p><strong>> REVERSE_TRIGGER:</strong> Instantly reverses time and player movement direction, turning standard layouts into dual-direction exploration zones.</p>
-                <p><strong>> OPTIONS_TRIGGER:</strong> Modifies level rules on the fly, like turning particle systems off, hiding trails, or forcing specific physics modes.</p>
-            </div>
-        </div>
-
-        <div class="nav-buttons">
-            <button class="btn" onclick="changePage(-1)">[PREV]</button>
-            <button class="btn" onclick="changePage(1)">[NEXT]</button>
-        </div>
-
-        <button class="btn" onclick="logout()" style="margin-top: 15px;">[LOGOUT / RESET]</button>
-    </div>
-
-    <div id="settings-screen" class="screen">
-        <div class="header">SETTINGS</div>
-        <div class="box">
-            <button class="btn" onclick="setTheme('#00FF00', false)">GREEN_MODE</button>
-            <button class="btn" onclick="setTheme('#FF0000', false)" style="margin-top:10px;">RED_MODE</button>
-            <button class="btn" onclick="setTheme('#FF0033', true)" style="margin-top:10px; border-color: #FF0033; color: #FF0033;">⚠️ DANGER RED (HACK)</button>
-        </div>
-        <button class="btn" onclick="showArchive()">[BACK]</button>
-    </div>
-
-</div>
-
-<script>
-    let currentPage = 1;
-    const totalPages = 8;
-
-    window.onload = function() {
-        const savedEmail = localStorage.getItem('userEmail');
-        if (savedEmail) {
-            document.getElementById('email').value = savedEmail;
-            document.getElementById('rememberMe').checked = true;
-        }
-    }
-
-    function handleAuth() {
-        const email = document.getElementById('email').value;
-        const pass = document.getElementById('password').value;
-        const rememberMe = document.getElementById('rememberMe').checked;
-        
-        const emailPattern = /\S+@\S+\.\S+/;
-
-        if (!emailPattern.test(email)) {
-            alert("Error: Please enter a valid email address!");
-            return;
-        }
-
-        if (pass === "0852") {
-            if (rememberMe) {
-                localStorage.setItem('userEmail', email);
-            } else {
-                localStorage.removeItem('userEmail');
+            if (input === "") {
+                output.innerHTML = "[ERROR]: NO COMMAND DETECTED.";
+                output.style.color = "#ff3333";
+                return;
             }
-            showArchive();
-            document.getElementById('settings-trigger').style.display = 'block';
-        } else {
-            alert("Access Denied: Incorrect password!");
+
+            if (input === "0852") {
+                output.innerHTML = ">> ACCESS GRANTED <<\n[SUCCESS]: DOWNLOADING CLASSIFIED DATA...\nFILE CORRUPTED: 'SECTOR_5_MAP.DAT' ACCESS DENIED.";
+                output.style.color = "#33ff33"; 
+            } 
+            else if (input === "OVERRIDE") {
+                output.innerHTML = ">> SYSTEM OVERRIDE INITIATED <<\n[WARNING]: FORCING BACKUPS...\nPARTIAL ACCESS GRANTED TO SECTOR 5.\nNEW SECURE PASSWORD REQUIRED: [ _ _ _ _ ]\nHINT: 'CHECK THE CAMERAS IN THE NEXT VIDEO'";
+                output.style.color = "#ffff33"; 
+            } 
+            else {
+                output.innerHTML = "[INVALID COMMAND]: ATTEMPT BLOCKED.\nASYNC SECURITY HAS BEEN NOTIFIED.";
+                output.style.color = "#ff3333"; 
+            }
+            
+            document.getElementById('code-input').value = "";
         }
-    }
-
-    function changePage(direction) {
-        document.getElementById(`data-page-${currentPage}`).style.display = 'none';
-        currentPage += direction;
-        if (currentPage > totalPages) currentPage = 1;
-        if (currentPage < 1) currentPage = totalPages;
-        
-        document.getElementById(`data-page-${currentPage}`).style.display = 'block';
-        document.getElementById('archive-title').innerText = `CLASSIFIED_DATA // PAGE_${currentPage}`;
-    }
-
-    function logout() {
-        location.reload();
-    }
-
-    function showArchive() {
-        hideScreens();
-        document.getElementById('archive-screen').style.display = 'block';
-    }
-
-    function showSettings() {
-        hideScreens();
-        document.getElementById('settings-screen').style.display = 'block';
-    }
-
-    function hideScreens() {
-        document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
-    }
-
-    function setTheme(color, isGlitch) {
-        document.documentElement.style.setProperty('--main-color', color);
-        if (isGlitch) {
-            document.body.classList.add('danger-active');
-        } else {
-            document.body.classList.remove('danger-active');
-        }
-    }
-</script>
-
-<script src="https://pl29465229.effectivecpmnetwork.com/bd/8c/53/bd8c5370479a7c756bb2f320cc997f23.js"></script>
-
+    </script>
 </body>
 </html>
